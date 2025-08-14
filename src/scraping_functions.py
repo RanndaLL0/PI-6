@@ -9,6 +9,8 @@ def extrair_regiao(source):
     if(municipio_formatado):
         texto_extraido = municipio_formatado.group(1)
         return texto_extraido
+    else:
+        return None
 
 def extrair_data(source):
     tr_data = source.find("tr", class_="table-simple--header")
@@ -36,6 +38,36 @@ def extrair_dhidrica(i):
     tr_hidrica = soup.find_all("tr",class_="table-simple--row")[4]
     tds = tr_hidrica.find_all("td")[1:]
     infos = [data.text for data in tds]
+    return infos
 
-    print(infos)
-    
+def extrair_ddiarreia(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    tr_diareia = soup.find_all("tr",class_="table-simple--row")[5]
+    tds = tr_diareia.find_all("td")[1:]
+    infos = [data.text for data in tds]
+    return infos
+
+def extrair_ddengue(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    tr_dengue = soup.find_all("tr",class_="table-simple--row")[7]
+    tds = tr_dengue.find_all("td")[1:]
+    infos = [data.text for data in tds]
+    return infos
+
+def extrair_leptospirose(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    tr_leptospirose = soup.find_all("tr",class_="table-simple--row")[8]
+    tds = tr_leptospirose.find_all("td")[1:]
+    infos = [data.text for data in tds]
+    return infos
+
+def extrair_esgoto(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=3&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    tr_esgoto = soup.find_all("tr",class_="table-simple--row")[9]
+    tds = tr_esgoto.find_all("td")[1:]
+    infos = [data.text for data in tds]
+    return infos
