@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
-from scraping_functions import extrair_regiao, extrair_data, extrair_populacao,extrair_tipo,extrair_dhidrica,extrair_ddiarreia,extrair_ddengue, extrair_esgoto
+from scraping_functions import extrair_regiao, extrair_data, extrair_populacao,extrair_tipo, extrair_esgoto, extrair_doencas, extrair_obitos
 import requests
 
-def extrarir_municipio_info():
+def extrair_municipio_info():
 
     for i in range(350010,355715,5):
         r = requests.get(f'https://www.painelsaneamento.org.br/explore/localidade?SE[l]={i}&page=1&ajax=ajax')
@@ -17,9 +17,9 @@ def extrarir_municipio_info():
             print(f"🔍 Coleta do municipio {regiao} concluida!")
 
 def extrair_indicadores(i):
-    extrair_dhidrica(i)
-    extrair_ddiarreia(i)
-    extrair_ddengue(i)
-    extrair_esgoto(i)
+    indicadores = extrair_doencas(i)
+    indicadores["coleta_de_esgoto"] = extrair_esgoto(i)
+    indicadores["obitos_doenca_respiratoria"] = extrair_obitos(i)
+    print(indicadores)
 
-extrarir_municipio_info()
+extrair_municipio_info()

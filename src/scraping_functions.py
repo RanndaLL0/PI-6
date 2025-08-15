@@ -31,43 +31,38 @@ def extrair_tipo(source):
         texto_extraido = municipio_formatado.group(1)
         resultado = texto_extraido.replace("(","").replace(")","")
         return texto_extraido
-    
-def extrair_dhidrica(i):
-    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
-    soup = BeautifulSoup(re.content, 'lxml')
-    tr_hidrica = soup.find_all("tr",class_="table-simple--row")[4]
-    tds = tr_hidrica.find_all("td")[1:]
-    infos = [data.text for data in tds]
-    return infos
-
-def extrair_ddiarreia(i):
-    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
-    soup = BeautifulSoup(re.content, 'lxml')
-    tr_diareia = soup.find_all("tr",class_="table-simple--row")[5]
-    tds = tr_diareia.find_all("td")[1:]
-    infos = [data.text for data in tds]
-    return infos
-
-def extrair_ddengue(i):
-    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
-    soup = BeautifulSoup(re.content, 'lxml')
-    tr_dengue = soup.find_all("tr",class_="table-simple--row")[7]
-    tds = tr_dengue.find_all("td")[1:]
-    infos = [data.text for data in tds]
-    return infos
-
-def extrair_leptospirose(i):
-    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=6&ajax=ajax")
-    soup = BeautifulSoup(re.content, 'lxml')
-    tr_leptospirose = soup.find_all("tr",class_="table-simple--row")[8]
-    tds = tr_leptospirose.find_all("td")[1:]
-    infos = [data.text for data in tds]
-    return infos
 
 def extrair_esgoto(i):
     re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=3&ajax=ajax")
     soup = BeautifulSoup(re.content, 'lxml')
     tr_esgoto = soup.find_all("tr",class_="table-simple--row")[9]
     tds = tr_esgoto.find_all("td")[1:]
+    infos = [data.text for data in tds]
+    return infos
+
+def extrair_doencas(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=3&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    trs = soup.find_all("tr", class_="table-simple--row")
+    tr_linhas = [trs[4], trs[5], trs[7], trs[8]]
+    
+    infos = []
+    for tr in tr_linhas:
+        valores = [td.get_text(strip=True) for td in tr.find_all("td")[1:]]
+        infos.append(valores)    
+    
+    dict_infos = {
+        "internacao_hidrica": infos[0],
+        "internacao_diarreia": infos[1],
+        "internacao_dengue": infos[2],
+        "internacao_leptospirose": infos[3]
+    }
+    return dict_infos
+
+def extrair_obitos(i):
+    re = requests.get(f"https://www.painelsaneamento.org.br/explore/localidade?SE%5Bl%5D={i}&page=8&ajax=ajax")
+    soup = BeautifulSoup(re.content, 'lxml')
+    trs = soup.find_all("tr", class_="table-simple--row")[11]
+    tds = trs.find_all("td")[1:]
     infos = [data.text for data in tds]
     return infos
