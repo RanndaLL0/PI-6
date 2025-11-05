@@ -20,6 +20,5 @@ def extrair_indicadores(i):
     indicadores = extrair_doencas(i)
     indicadores["coleta_de_esgoto"] = extrair_esgoto(i)
     indicadores["obitos_doenca_respiratoria"] = extrair_obitos(i)
-    print(indicadores)
 
 extrair_municipio_info()

@@ -1,0 +1,11 @@
+Investimentos do Município X Internações totais por doenças de veiculação hídrica \ Internações por dengue \ Internações por diarreia
+Parcela da população urbana com coleta de esgoto X Internações por leptospirose \ Internações por diarreia
+População com coleta de esgoto X Internações totais - 0 a 4 anos \ Internações totais - 5 a 14 anos
+Investimentos do Município X Esgoto tratado \ Esgoto coletado
+Extensão da rede de esgoto X Emprego total - operação
+
+---- Variaveis a se extrair -----
+
+Nome do Município
+População do municipio
+periodo do dado
