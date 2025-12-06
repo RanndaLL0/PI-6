@@ -97,7 +97,7 @@ class Import:
             data = json.load(open(path, encoding="utf-8"))
             
             print(f"\nIniciando importação do arquivo {file}")
-            fatos_bulk, internacoes_bulk, coleta_bulk, doencas_bulk = [], [], [], []
+            fatos_bulk, internacoes_bulk, coleta_bulk, doencas_bulk, agua_bulk = [], [], [], [], []
             
             for regiao in data:
                 
@@ -177,6 +177,29 @@ class Import:
                         ),
                     })
                     
+                    agua_bulk.append({
+                        "regiao_id": regiao_id,
+                        "ano_id": ano_id,
+                        "pop_com_acesso": self.parse_number(
+                            regiao["coleta_agua"]["populacao_com_acesso_a_agua"][i]
+                        ),
+                        "pop_sem_acesso": self.parse_number(
+                            regiao["coleta_agua"]["populacao_sem_acesso_a_agua"][i]
+                        ),
+                        "pop_urbana_com_acesso": self.parse_number(
+                            regiao["coleta_agua"]["populacao_urbana_com_acesso_a_agua"][i]
+                        ),
+                        "pop_urbana_sem_acesso": self.parse_number(
+                            regiao["coleta_agua"]["populacao_urbana_sem_acesso_a_agua"][i]
+                        ),
+                        "recebimento_regular_de_agua": self.parse_number(
+                            regiao["coleta_agua"]["recebimento_regular_de_agua"][i]
+                        ),
+                        "recebimento_irregular_de_agua": self.parse_number(
+                            regiao["coleta_agua"]["recebimento_irregular_de_agua"][i]
+                        ),
+                    })
+                    
                     if len(fatos_bulk) >= self.BATCH_SIZE:
                         self.__insert_bulk("fato_socioeconomico", fatos_bulk)
                         fatos_bulk.clear()
@@ -193,16 +216,20 @@ class Import:
                         self.__insert_bulk("obitos_doenca_respiratoria", doencas_bulk)
                         doencas_bulk.clear()
                         
+                    if len(doencas_bulk) >= self.BATCH_SIZE:
+                        self.__insert_bulk("coleta_agua", agua_bulk)
+                        doencas_bulk.clear()
                         
                 self.__insert_bulk("fato_socioeconomico", fatos_bulk)
                 self.__insert_bulk("internacoes", internacoes_bulk)
                 self.__insert_bulk("coleta_esgoto", coleta_bulk)
                 self.__insert_bulk("obitos_doenca_respiratoria", doencas_bulk)
+                self.__insert_bulk("coleta_agua", agua_bulk)
                 
             print(f"Importação do arquivo {file} finalizada com sucesso")
 
 if __name__ == "__main__":
-    importador = Import(os.path.join(os.path.dirname(__file__), "raw_data"))
+    importador = Import(os.path.join(os.path.dirname(__file__), "imported"))
     importador.init_connection(
         os.environ.get("SUPABASE_URL"),
         os.environ.get("SUPABASE_KEY")

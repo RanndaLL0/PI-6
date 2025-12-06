@@ -11,13 +11,13 @@ import requests
 import json
 
 class scraper:
-    def __init__(self,output_file="./roraima.json"):
+    def __init__(self,output_file="./amazonas.json"):
         self.output_file = output_file
         self.resultados = []
         pass
         
     def extrair_info(self):
-        for i in range(140004,140075,1):
+        for i in range(130001,130441,1):
             r = requests.get(f'https://www.painelsaneamento.org.br/explore/localidade?SE[l]={i}&page=1&ajax=ajax')
             soup = BeautifulSoup(r.content, 'lxml')
             
